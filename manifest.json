@@ -3,9 +3,7 @@
     "version": "1.0",
     "description": "Minimalistic Youtube Controller",
     "background": {
-        "scripts": [
-            "background.js"
-        ],
+        "page": "background.html",
         "persistent": false
     },
     "browser_action": {
@@ -16,5 +14,6 @@
         "<all_urls>",
         "tabs"
     ],
+    "content_security_policy": "script-src 'self' https://www.gstatic.com/ https://*.firebaseio.com https://www.googleapis.com; object-src 'self'",
     "manifest_version": 2
 }
