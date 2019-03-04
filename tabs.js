@@ -79,6 +79,39 @@ document.addEventListener("click", (e) => {
                 }
             }
         });
+    } else if (e.target.id === 'jenkins') {
+
+        chrome.tabs.query({
+        }, (tabs) => {
+            for (var tab of tabs) {
+                console.log(tab);
+                
+                function getStatus() {
+                    if (document.getElementsByClassName("BasicHeader--success").length === 1) {
+                        return "S";
+                    } else if (document.getElementsByClassName("BasicHeader--failure").length === 1) {
+                        return "F";
+                    }
+                    return "R";
+                }
+                if (tab.url.includes('jenkins-cumulus.egencia-tools.net/blue/')) {
+                    const tabUrlArr = tab.url.substring(69).split("/");
+                    if (tabUrlArr.length === 5) {
+                        const pipeline = tabUrlArr[0];
+                        const branch = tabUrlArr[2];
+                        const runId = tabUrlArr[3];
+                        
+                        chrome.tabs.executeScript(tab.id, {
+                            code: '(' + getStatus + ')();'
+                        }, (result) => {
+                            console.log(result);
+                            e.target.insertAdjacentHTML("afterEnd", "<p>" + pipeline + " - " + branch + 
+                                " - " + runId + " - " + result + "</p>");
+                        });
+                    }
+                }
+            }
+        });
     }
 
     e.preventDefault();
